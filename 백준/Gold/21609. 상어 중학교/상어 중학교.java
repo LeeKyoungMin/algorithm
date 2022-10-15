@@ -81,21 +81,15 @@ public class Main {
 			}
 		}
 		
-		int i = 0;
 		while(true) {
-			//System.out.println(i+"바퀴");
 			findBlockGrp();
 			if(!blockExist) {
 				break;
 			}
-			printList();
 			removeBlock();
 			gravity();
-			//print(map);
 			rotate();
 			gravity();
-			//print(map);
-			i++;
 			
 			list = new ArrayList<>();
 		}
@@ -104,17 +98,16 @@ public class Main {
 	}
 	
 	private static void rotate() {
-		int[][] temp = new int[N][N];
 		
-		for(int i = 0; i < N; i++) {
-			for(int j = 0; j < N; j++) {
-				temp[N-1-j][i] = map[i][j];
-			}
-		}
-		
-		for(int i = 0; i < N; i++) {
-			for(int j = 0; j < N; j++) {
-				map[i][j] = temp[i][j];
+		int start = 0;
+		int end = N - 1;
+		for(int s = start, e = end; s < e; s++, e--) {
+			for(int i = s, j = e; i < e; i++, j--) {
+				int tmp = map[s][i];
+				map[s][i] = map[i][e];
+				map[i][e] = map[e][j];
+				map[e][j] = map[j][s];
+				map[j][s] = tmp;
 			}
 		}
 	}
@@ -298,20 +291,6 @@ public class Main {
 	
 	private static int pi(String str) {
 		return Integer.parseInt(str);
-	}
-	
-	private static void printList() {
-		for(Block b : list) {
-			//System.out.println("x : " + b.x + " // y : " + b.y + " // rainbow : " + b.rainbowCnt + " // block : " + b.blockCnt);
-		}
-	}
-	
-	private static void print(int[][] map) {
-		for(int i = 0; i < N; i++) {
-			for(int j = 0; j < N; j++) {
-				//System.out.print(map[i][j] + "   ");
-			}//System.out.println();
-		}//System.out.println();
 	}
 
 }
