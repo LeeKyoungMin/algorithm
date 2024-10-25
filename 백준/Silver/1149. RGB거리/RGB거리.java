@@ -1,39 +1,41 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
 
-	static int R = 0;
-	static int G = 1;
-	static int B = 2;
+    static int R = 0;
+    static int G = 1;
+    static int B = 2;
 
-	public static void main(String[] args) throws NumberFormatException, IOException {
-		Scanner sc = new Scanner(System.in);
-		int n = sc.nextInt();
-		sc.nextLine();
-		int[][] arr = new int[n][3];
-		int[][] d = new int[n][3];
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
+        int[][] arr = new int[N][3]; // N x 3 크기의 배열 생성
+        int[][] dp = new int[N][3];
+        
+        // 배열 초기화
+        for (int i = 0; i < N; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            for (int j = 0; j < 3; j++) {
+                arr[i][j] = Integer.parseInt(st.nextToken());
+            }
+        }
 
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < 3; j++) {
-				arr[i][j] = sc.nextInt();
-			}
-		}
-		
-		d[0][R] = arr[0][0];
-		d[0][G] = arr[0][1];
-		d[0][B] = arr[0][2];
+        dp[0][R] = arr[0][0];
+        dp[0][G] = arr[0][1];
+        dp[0][B] = arr[0][2];
+        
+        // DP 배열 업데이트
+        for (int i = 1; i < N; i++) {
+            dp[i][R] = Math.min(dp[i-1][G], dp[i-1][B]) + arr[i][R];
+            dp[i][G] = Math.min(dp[i-1][R], dp[i-1][B]) + arr[i][G];
+            dp[i][B] = Math.min(dp[i-1][G], dp[i-1][R]) + arr[i][B];
+        }
 
-		for (int i = 1; i < n; i++) {
-
-			d[i][R] = Math.min(d[i - 1][G], d[i - 1][B]) + arr[i][R];
-			d[i][G] = Math.min(d[i - 1][R], d[i - 1][B]) + arr[i][G];
-			d[i][B] = Math.min(d[i - 1][R], d[i - 1][G]) + arr[i][B];
-		}
-
-		int max = Math.min(Math.min(d[n - 1][R], d[n - 1][G]), d[n - 1][B]);
-
-		System.out.println(max);
-	}
-
+        // 최소 비용 출력
+        int result = Math.min(Math.min(dp[N - 1][R], dp[N - 1][G]), dp[N - 1][B]);
+        System.out.println(result);
+    }
 }
